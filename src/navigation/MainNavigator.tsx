@@ -19,6 +19,26 @@ import {
   TripDoneScreen,
   WorkProfileScreen,
 } from '../flows/WorkFlow'
+import {
+  BackgroundLocationScreen,
+  CameraPermissionScreen,
+  CashReceivedScreen,
+  ClientCancelledScreen,
+  CodeBlockedScreen,
+  ConfirmFinishScreen,
+  DeliveredPlainScreen,
+  DontHandScreen,
+  DriverCancelScreen,
+  DropPhotoScreen,
+  GpsOffScreen,
+  InspectionScreen,
+  IntercityDriveScreen,
+  OfferTakenScreen,
+  OrderSuspendedScreen,
+  PickupPhotoScreen,
+  ReturnParcelScreen,
+  WaitingClientScreen,
+} from '../flows/GapsFlow'
 
 const Stack = createNativeStackNavigator()
 
@@ -43,6 +63,24 @@ export default function MainNavigator() {
       <Stack.Screen name="CargoUnload" component={CargoUnloadScreen} />
       <Stack.Screen name="MultiRoute" component={MultiRouteScreen} />
       <Stack.Screen name="WorkProfile" component={WorkProfileScreen} />
+      <Stack.Screen name="OfferTaken" component={OfferTakenScreen} />
+      <Stack.Screen name="WaitingClient" component={WaitingClientScreen} />
+      <Stack.Screen name="ConfirmFinish" component={ConfirmFinishScreen} />
+      <Stack.Screen name="CashReceived" component={CashReceivedScreen} />
+      <Stack.Screen name="DriverCancel" component={DriverCancelScreen} />
+      <Stack.Screen name="ClientCancelled" component={ClientCancelledScreen} />
+      <Stack.Screen name="GpsOff" component={GpsOffScreen} />
+      <Stack.Screen name="BackgroundLocation" component={BackgroundLocationScreen} />
+      <Stack.Screen name="Inspection" component={InspectionScreen} />
+      <Stack.Screen name="IntercityDrive" component={IntercityDriveScreen} />
+      <Stack.Screen name="PickupPhoto" component={PickupPhotoScreen} />
+      <Stack.Screen name="DropPhoto" component={DropPhotoScreen} />
+      <Stack.Screen name="CodeBlocked" component={CodeBlockedScreen} />
+      <Stack.Screen name="DontHand" component={DontHandScreen} />
+      <Stack.Screen name="DeliveredPlain" component={DeliveredPlainScreen} />
+      <Stack.Screen name="CameraPermission" component={CameraPermissionScreen} />
+      <Stack.Screen name="ReturnParcel" component={ReturnParcelScreen} />
+      <Stack.Screen name="OrderSuspended" component={OrderSuspendedScreen} />
     </Stack.Navigator>
   )
 }

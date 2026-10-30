@@ -74,6 +74,8 @@ export function DashboardScreen() {
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <Pressable onPress={() => navigation.navigate('Earnings')} style={{ flex: 1 }}><Text style={{ color: colors.accent, fontWeight: '700' }}>Daromad</Text></Pressable>
           <Pressable onPress={() => navigation.navigate('WorkProfile')} style={{ flex: 1 }}><Text style={{ color: colors.accent, fontWeight: '700' }}>Profil</Text></Pressable>
+          <Pressable onPress={() => navigation.navigate('GpsOff')} style={{ flex: 1 }}><Text style={{ color: colors.accent, fontWeight: '700' }}>GPS</Text></Pressable>
+          <Pressable onPress={() => navigation.navigate('IntercityDrive')} style={{ flex: 1 }}><Text style={{ color: colors.accent, fontWeight: '700' }}>Shahar</Text></Pressable>
           {mode === 'courier' && vehicle === 'auto' ? (
             <Pressable onPress={() => navigation.navigate('MultiRoute')} style={{ flex: 1 }}><Text style={{ color: colors.accent, fontWeight: '700' }}>Marshrut</Text></Pressable>
           ) : null}
@@ -125,6 +127,7 @@ export function IncomingScreen() {
       <View style={{ gap: 8 }}>
         <Button title="Qabul qilish" disabled={left === 0} onPress={() => navigation.replace('PickupNav')} />
         <Button title="Rad etish" variant="danger" onPress={() => navigation.goBack()} />
+        <Button title="Boshqa haydovchi oldi" variant="ghost" onPress={() => navigation.replace('OfferTaken')} />
       </View>
     }>
       <CityMap />
@@ -146,7 +149,7 @@ export function PickupNavScreen() {
   const navigation = useNavigation<any>()
   const { colors } = useTheme()
   return (
-    <Screen map pad={false} footer={<Button title="Yetib keldim" onPress={() => navigation.navigate('ActiveTrip')} />}>
+    <Screen map pad={false} footer={<Button title="Yetib keldim" onPress={() => navigation.navigate('WaitingClient')} />}>
       <CityMap />
       <View style={{ backgroundColor: colors.surface, padding: 16, gap: 4 }}>
         <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800' }}>350 m</Text>
@@ -164,11 +167,16 @@ export function ActiveTripScreen() {
   const navigation = useNavigation<any>()
   const { colors } = useTheme()
   return (
-    <Screen map pad={false} footer={<Button title="Safarni yakunlash" onPress={() => navigation.navigate('TripDone')} />}>
+    <Screen map pad={false} footer={
+      <View style={{ gap: 8 }}>
+        <Button title="Safarni yakunlash" onPress={() => navigation.navigate('ConfirmFinish')} />
+        <Button title="Bekor qilish" variant="ghost" onPress={() => navigation.navigate('DriverCancel')} />
+      </View>
+    }>
       <CityMap>
-        <View style={{ position: 'absolute', top: 16, right: 16, backgroundColor: colors.error, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8 }}>
-          <Text style={{ color: '#fff', fontWeight: '700' }}>SOS</Text>
-        </View>
+        <Pressable onPress={() => navigation.navigate('ClientCancelled')} style={{ position: 'absolute', top: 16, left: 16, backgroundColor: colors.surface, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 8 }}>
+          <Text style={{ color: colors.error, fontWeight: '700' }}>Mijoz bekor</Text>
+        </Pressable>
       </CityMap>
       <View style={{ backgroundColor: colors.surface, padding: 16, gap: 4 }}>
         <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800' }}>600 m</Text>
@@ -258,7 +266,7 @@ export function CourierPickupScreen() {
   const { colors } = useTheme()
   const checks = ['Buyurtma tayyor', 'Ichki ichimlik bor', 'Chek olindi']
   return (
-    <Screen scroll footer={<Button title="Olib ketdim" onPress={() => navigation.navigate('CourierDeliver')} />}>
+    <Screen scroll footer={<Button title="Rasmga olish" onPress={() => navigation.navigate('PickupPhoto')} />}>
       <Header title="Olib ketish" onBack={() => navigation.goBack()} />
       <View style={{ gap: 8, marginTop: 12 }}>
         {checks.map((item) => <Card key={item}><Text style={{ color: colors.text }}>{item}</Text></Card>)}
@@ -271,7 +279,12 @@ export function CourierDeliverScreen() {
   const navigation = useNavigation<any>()
   const { colors } = useTheme()
   return (
-    <Screen map pad={false} footer={<Button title="Kodni so'rash" onPress={() => navigation.navigate('CourierCode')} />}>
+    <Screen map pad={false} footer={
+      <View style={{ gap: 8 }}>
+        <Button title="Topshirish rasmi" onPress={() => navigation.navigate('DropPhoto')} />
+        <Button title="Yetkazib bo'lmadi" variant="ghost" onPress={() => navigation.navigate('ReturnParcel')} />
+      </View>
+    }>
       <CityMap />
       <View style={{ backgroundColor: colors.surface, padding: 16 }}>
         <Text style={{ color: colors.text, fontWeight: '700' }}>Mijozga yetkazish</Text>
@@ -287,7 +300,7 @@ export function CourierCodeScreen() {
   const [wrong, setWrong] = useState(false)
   const { colors } = useTheme()
   const check = () => {
-    if (code === '2468') {
+    if (code === '4819') {
       navigation.replace('TripDone')
       return
     }
@@ -296,7 +309,7 @@ export function CourierCodeScreen() {
   return (
     <Screen footer={<Button title="Tasdiqlash" onPress={check} />}>
       <Header title="Tasdiqlash kodi" onBack={() => navigation.goBack()} />
-      <Text style={{ color: colors.secondary, marginVertical: 8 }}>Mijoz aytgan 4 raqam. To'g'ri kod: 2468</Text>
+      <Text style={{ color: colors.secondary, marginVertical: 8 }}>Qabul qiluvchi kodi. To'g'ri kod: 4819. 5 urinish.</Text>
       <TextInput
         value={code}
         onChangeText={(v) => { setCode(v.replace(/\D/g, '').slice(0, 4)); setWrong(false) }}
@@ -304,6 +317,9 @@ export function CourierCodeScreen() {
         style={{ borderWidth: 1, borderColor: wrong ? colors.error : colors.border, borderRadius: 12, minHeight: 52, paddingHorizontal: 14, color: colors.text, backgroundColor: colors.surface, fontSize: 20 }}
       />
       {wrong ? <Text style={{ color: colors.error, marginTop: 8 }}>Kod noto'g'ri. Qayta urinib ko'ring.</Text> : null}
+      <Pressable onPress={() => navigation.navigate('CodeBlocked')} style={{ marginTop: 12 }}><Text style={{ color: colors.error, fontWeight: '700' }}>Kod bloklandi</Text></Pressable>
+      <Pressable onPress={() => navigation.navigate('DontHand')} style={{ marginTop: 8 }}><Text style={{ color: colors.secondary, fontWeight: '700' }}>Aloqa yo'q — bermang</Text></Pressable>
+      <Pressable onPress={() => navigation.navigate('DeliveredPlain')} style={{ marginTop: 8 }}><Text style={{ color: colors.accent, fontWeight: '700' }}>Kodsiz yetkazildi</Text></Pressable>
     </Screen>
   )
 }
@@ -397,6 +413,11 @@ export function WorkProfileScreen() {
       <Text style={{ color: colors.text, fontSize: 24, fontWeight: '700', marginTop: 12 }}>{driver?.name}</Text>
       <Text style={{ color: colors.secondary }}>{driver?.phone}</Text>
       <Text style={{ color: colors.success, marginTop: 8 }}>{driver?.status === 'APPROVED' ? 'Tasdiqlangan' : 'Tekshiruvda'}</Text>
+      <View style={{ gap: 8, marginTop: 12 }}>
+        <Card onPress={() => navigation.navigate('Inspection')}><Text style={{ color: colors.text, fontWeight: '700' }}>Tekshiruv joyi</Text></Card>
+        <Card onPress={() => navigation.navigate('BackgroundLocation')}><Text style={{ color: colors.text, fontWeight: '700' }}>Fon geolokatsiyasi</Text></Card>
+        <Card onPress={() => navigation.navigate('CameraPermission')}><Text style={{ color: colors.text, fontWeight: '700' }}>Kamera ruxsati</Text></Card>
+      </View>
     </Screen>
   )
 }
